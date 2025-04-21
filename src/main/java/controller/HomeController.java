@@ -19,17 +19,19 @@ import dao.DaoProduct;
 
 @Controller
 public class HomeController {
+	
 	@Autowired
 	DaoProduct daoProduct;
 	
 	@GetMapping("/")
-	public String redirectToProductView() {
-		return "redirect:/product_view";
+	public String redirectToProductView(Model model) {
+		model.addAttribute("pageActive", "user");
+		return "test";
 	}
 	
 	@GetMapping("product_create_form")
 	public String showForm(Model model) {
-		model.addAttribute("product", new beans.Product());
+		model.addAttribute("product", new Product());
 		return "product_create_form";
 	}
 	

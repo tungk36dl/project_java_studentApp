@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import beans.Product;
 
+
 public class DaoProduct {
     private JdbcTemplate template;
 
