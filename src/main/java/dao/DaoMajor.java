@@ -4,18 +4,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
+import beans.Classes;
 import beans.Major;  // Thay Subject thành Major
 
+@Repository
 public class DaoMajor {
+	@Autowired
     private JdbcTemplate template;
-
-    public void setTemplate(JdbcTemplate template) {
-        this.template = template;
-    }
     
     public int save(Major major) {  // Thay Subject thành Major
         String sql = "INSERT INTO major (id, majorName, status, createdDate, updatedDate) VALUES (?, ?, ?, ?, ?)";  // Thay subject thành major
@@ -33,8 +34,9 @@ public class DaoMajor {
     }
     
     public Major getMajorById(String id) {  // Thay Subject thành Major
-        String sql = "SELECT * FROM major WHERE id = ?";  // Thay subject thành major
-        return template.queryForObject(sql, new Object[] { id}, new BeanPropertyRowMapper<>(Major.class));
+    	String sql = "SELECT * FROM major WHERE id = ?";
+        List<Major> list = template.query(sql, new Object[]{id}, new BeanPropertyRowMapper<>(Major.class));
+        return list.isEmpty() ? null : list.get(0);
     }
     
     public List<Major> getMajor() {  // Thay Subject thành Major
@@ -52,5 +54,11 @@ public class DaoMajor {
                 return major;
             }
         });
+    }
+    
+    public Major getMajorByName(String majorName) {
+    	String sql = "SELECT * FROM major WHERE majorName = ?";
+        List<Major> list = template.query(sql, new Object[]{majorName}, new BeanPropertyRowMapper<>(Major.class));
+        return list.isEmpty() ? null : list.get(0);
     }
 }

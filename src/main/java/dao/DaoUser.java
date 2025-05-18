@@ -2,20 +2,26 @@ package dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import beans.User;
 
+
+@Repository
 public class DaoUser {
+	
+	@Autowired
     private JdbcTemplate template;
 
-    public void setTemplate(JdbcTemplate template) {
-        this.template = template;
-    }
     
     public User findByUsername(String username) {
         String sql = "SELECT * FROM user WHERE username = ?";
@@ -29,10 +35,11 @@ public class DaoUser {
 
     // CREATE
     public int save(User user) {
-        String sql = "INSERT INTO user (id, username, password, fullName, email, dateOfBirth, gender, avatar, identificationNumber, phone, address, classId, role, status, createdDate, updatedDate) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO user (id, code, username, password, fullName, email, dateOfBirth, gender, avatar, identificationNumber, phone, address, classId, role, status, createdDate, updatedDate) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         return template.update(sql,
         		user.getId(),
+        		user.getCode(),
         		user.getUsername(),
                 user.getPassword(),
                 user.getFullName(),
@@ -66,8 +73,9 @@ public class DaoUser {
 
     // UPDATE
     public int update(User user) {
-        String sql = "UPDATE user SET username = ?, password = ?, fullName = ?, email = ?, dateOfBirth = ?, gender = ?, avatar = ?, identificationNumber = ?, phone = ?, address = ?, classId = ?, roleId = ?, status = ?, updatedDate = ? WHERE id = ?";
+        String sql = "UPDATE user SET code = ?, username = ?, password = ?, fullName = ?, email = ?, dateOfBirth = ?, gender = ?, avatar = ?, identificationNumber = ?, phone = ?, address = ?, classId = ?, role = ?, status = ?, updatedDate = ? WHERE id = ?";
         return template.update(sql,
+        		user.getCode(),
                 user.getUsername(),
                 user.getPassword(),
                 user.getFullName(),
@@ -92,10 +100,38 @@ public class DaoUser {
     }
 
     // READ - get by ID
+  
+    
+//    public Optional<User> getUserById(String id) {
+//        String sql = "SELECT * FROM user WHERE id = ?";
+//        try {
+//            User user = template.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), id);
+//            return Optional.of(user);
+//        } catch (EmptyResultDataAccessException e) {
+//            return Optional.empty();
+//        }
+//    }
+    
     public User getUserById(String id) {
         String sql = "SELECT * FROM user WHERE id = ?";
-        return template.queryForObject(sql, new Object[]{id}, new BeanPropertyRowMapper<>(User.class));
+        try {
+            return template.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), id);
+        } catch (EmptyResultDataAccessException e) {
+            return null; // hoặc throw custom exception nếu muốn
+        }
     }
+    
+    public User getUserByCode(String code) {
+        String sql = "SELECT * FROM user WHERE code = ?";
+        try {
+            return template.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), code);
+        } catch (EmptyResultDataAccessException e) {
+            return null; // hoặc throw custom exception nếu muốn
+        }
+    }
+
+
+
 
     // READ - get all
     public List<User> getAllUsers() {
@@ -105,6 +141,7 @@ public class DaoUser {
             public User mapRow(ResultSet rs, int rowNum) throws SQLException {
                 User user = new User();
                 user.setId(rs.getString("id"));
+                user.setCode(rs.getString("code"));
                 user.setUsername(rs.getString("username"));
                 user.setPassword(rs.getString("password"));
                 user.setFullName(rs.getString("fullname"));
@@ -128,17 +165,59 @@ public class DaoUser {
     }
     
  // LỌC THEO roleId
-    public List<User> getUsersByRoleId(String roleId) {
-        String sql = "SELECT * FROM user WHERE roleId = ?";
-        return template.query(sql, new Object[]{roleId}, new BeanPropertyRowMapper<>(User.class));
+    public List<User> getUsersByRole(String role) {
+        String sql = "SELECT * FROM user WHERE role = ?";
+        return template.query(sql, new Object[]{role}, new BeanPropertyRowMapper<>(User.class));
     }
 
     // LỌC THEO classId
-    public List<User> getUsersByClassId(Integer classId) {
+    public List<User> getUsersByClassId(String classId) {
         String sql = "SELECT * FROM user WHERE classId = ?";
         return template.query(sql, new Object[]{classId}, new BeanPropertyRowMapper<>(User.class));
     }
     
+    
+    // Đếm số lượng phần tử
+    public int countFillterUser(String classId, String role) {
+    	StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM user WHERE 1=1 ");
+    	List<Object> params = new ArrayList<>();
+    	
+    	if(classId != null) {
+    		sql.append("AND classId = ?");
+    		params.add(classId);
+    	}
+    	if(role != null) {
+    		sql.append("AND role = ?");
+    		params.add(role);
+    	}
+    	return template.queryForObject(sql.toString(), params.toArray(), Integer.class);
+    }
+    
+    public List<User> filterUsers(String classId, String role) {
+        String sql = "SELECT * FROM user WHERE classId = ? AND role = ? ORDER BY id ASC";
+        return template.query(sql, new Object[]{classId, role}, new BeanPropertyRowMapper<>(User.class));
+    }
+    
+    
+    public User findByEmail(String email) {
+        String sql = "SELECT * FROM user WHERE email = ?";
+        try {
+            // Trả về user nếu tìm thấy
+            return template.queryForObject(sql, new Object[]{email}, new BeanPropertyRowMapper<>(User.class));
+        } catch (EmptyResultDataAccessException e) {
+            // Trả về null nếu không tìm thấy bản ghi
+            return null;
+        }
+    }
+
+    
+    // Cập nhật mật khẩu của người dùng theo email
+//    public int updatePassword(String email, String newPassword) {
+//        String encodedPassword = passwordEncoder.encode(newPassword); // Mã hóa mật khẩu trước
+//        String sql = "UPDATE user SET password = ? WHERE email = ?";
+//        return template.update(sql, encodedPassword, email);
+//    }
+
     
 
 }

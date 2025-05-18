@@ -1,43 +1,20 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Chỉnh sửa môn học</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .card {
-            margin: 50px auto;
-            max-width: 600px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .card-header {
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
-        }
-        .form-control, .btn {
-            border-radius: 8px;
-        }
-        .btn {
-            padding: 10px 20px;
-        }
-    </style>
-</head>
-<body>
-<div class="container">
-    <div class="card">
-        <div class="card-header bg-primary text-white text-center">
-            <h4>Chỉnh sửa Môn học</h4>
+<jsp:include page="../header.jsp">
+    <jsp:param name="pageActive" value="subject" />
+</jsp:include>
+
+<div class="container-my">
+    <div class="form-container-my">
+         <div class="form-title ">
+        <i class="bi bi-tools me-2"></i>Sửa môn học
         </div>
-        <div class="card-body">
-            <form action="${pageContext.request.contextPath}/subject/editsave" method="post">
+        
+            <form:form action="${pageContext.request.contextPath}/subject/editsave" method="post" modelAttribute = "subject">
                 <input type="hidden" name="id" value="${subject.id}">
+                <input type="hidden" name="code" value="${subject.code}">
+                
 
                 <div class="mb-3">
                     <label for="name" class="form-label">Tên môn học:</label>
@@ -47,32 +24,27 @@
 
                 <div class="mb-3">
                     <label class="form-label">Trạng thái:</label>
-                    <select class="form-control" name="status">
+                    <select class="choise" name="status">
+                    	
                         <option value="true" ${subject.status ? 'selected' : ''}>Đang hoạt động</option>
                         <option value="false" ${!subject.status ? 'selected' : ''}>Ngừng hoạt động</option>
+                        
                     </select>
                 </div>
 
-               <div class="mb-3">
-                    <label class="form-label">Ngày tạo:</label>
-                    <input type="text" class="form-control" value="${subject.createdDate != null ? subject.createdDate : 'N/A'}" readonly>
-               </div>
-
-               <div class="mb-3">
-                    <label class="form-label">Ngày sửa:</label>
-                    <input type="text" class="form-control" value="${subject.updatedDate != null ? subject.updatedDate : 'N/A'}" readonly>       
-               </div>
-
-
-                <div class="text-center">
-                    <button type="submit" class="btn btn-success">Lưu</button>
-                    <a href="${pageContext.request.contextPath}/subject/subject_view" class="btn btn-secondary">Hủy</a>
+               
+                <div class="full-width">
+                    <button type="submit" class="button button-submit mt-3 "> <i class="bi bi-save me-2"></i>Lưu</button>
+                    <a href="${pageContext.request.contextPath}/subject/subject_view" class="button button-secondary mt-2">Hủy</a>
                 </div>
-            </form>
-        </div>
+            </form:form>
+        
     </div>
 </div>
-
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+      	rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" 
+		rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<jsp:include page="../footer.jsp" />

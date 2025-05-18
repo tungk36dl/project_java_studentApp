@@ -11,7 +11,7 @@ import java.util.UUID;
 public class JwtUtil {
 
     private static final String SECRET_KEY = "your-very-secret-key-with-at-least-256-bits-length";
-    private static final long JWT_EXPIRATION_MS = 15 * 60 * 1000; // 15 phút
+    private static final long JWT_EXPIRATION_MS = 150 * 60 * 1000; // 15 phút
     private static final long REFRESH_EXPIRATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 ngày
 
     private static final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());

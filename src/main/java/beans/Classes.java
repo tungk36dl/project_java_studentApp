@@ -63,6 +63,8 @@ public class Classes {
 		this.createdDate = createdDate;
 		this.updatedDate = updatedDate;
 	}
+	
+	
 	public Classes() {
 		// TODO Auto-generated constructor stub
 	}

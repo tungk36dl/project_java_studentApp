@@ -7,11 +7,21 @@ import utils.IdUtil;
 
 public class Subject {
     private String id;
+    private String code;
     private String name;
-    private boolean status;
+    public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	private boolean status;
     private Date createdDate;
     private Date updatedDate;
    
+    
+    
 	public String getId() {
 		return id;
 	}

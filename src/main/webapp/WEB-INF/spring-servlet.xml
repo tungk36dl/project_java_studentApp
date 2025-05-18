@@ -1,78 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" 
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-       xmlns:p="http://www.springframework.org/schema/p" 
-       xmlns:context="http://www.springframework.org/schema/context" 
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
        xsi:schemaLocation="
            http://www.springframework.org/schema/beans 
            http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/context 
-           http://www.springframework.org/schema/context/spring-context.xsd">
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/mvc
+           http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-    <context:component-scan	base-package="controller"></context:component-scan>
+    <!-- Quét toàn bộ package cần thiết -->
+    <context:component-scan base-package="controller, dao, service, serviceImpl, interceptor"/>
 
+    <!-- Bật annotation-driven cho @Controller, @RequestMapping hoạt động -->
+    <mvc:annotation-driven />
+    
+    <!-- Static resources -->
+	<mvc:resources mapping="/assets/**" location="/assets/" />
+
+    <!-- Đăng ký Interceptor -->
+    <mvc:interceptors>
+        <bean class="interceptor.AuthInterceptor" />
+    </mvc:interceptors>
+
+    <!-- Cấu hình view resolver -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/views/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
 
+    <!-- DataSource -->
     <bean id="db" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
-        <property name="url" value="jdbc:mysql://localhost:3306/studentapp1"/>
+		<property name="url" value="jdbc:mysql://localhost:3306/studentapp1?useUnicode=true&amp;characterEncoding=UTF-8&amp;useSSL=false"/>
         <property name="username" value="root"/>
         <property name="password" value="root"/>
     </bean>
-    
-    <bean id="multipartResolver"
-          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+
+    <!-- Multipart Resolver -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <property name="maxUploadSize" value="5242880"/> <!-- 5MB -->
     </bean>
-    
-    
-    <!-- Cho phép Spring dùng các interceptor -->
-	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
-	    <property name="interceptors">
-	        <list>
-	            <ref bean="authInterceptor"/>
-	        </list>
-	    </property>
-	</bean>
-	
-	<!-- Bean interceptor kiểm tra đăng nhập -->
-	<bean id="authInterceptor" class="interceptor.AuthInterceptor"/>
-    
 
+    <!-- JdbcTemplate -->
     <bean id="jt" class="org.springframework.jdbc.core.JdbcTemplate">
         <property name="dataSource" ref="db"/>
     </bean>
-
-    <bean id="tmd" class="dao.DaoProduct">
-        <property name="template" ref="jt"/>
-    </bean>
     
-    <bean id="tmd3" class="dao.DaoMajor">
-        <property name="template" ref="jt"/>
-    </bean>
-     <bean id="tmd1" class="dao.DaoCohort">
-        <property name="template" ref="jt"/>
-    </bean>
-    
-     <bean id="tmd4" class="dao.DaoSubject">
-        <property name="template" ref="jt"/>
-    </bean>
-    
-    <bean id="tmd2" class="dao.DaoClasses">
-        <property name="template" ref="jt"/>
-    </bean>
-    
-     <bean id="tmd6" class="dao.DaoUser">
-        <property name="template" ref="jt"/>
-    </bean>
-    
-    
-       <bean id="tmd7" class="dao.DaoRefreshToken">
-        <property name="template" ref="jt"/>
-    </bean>
-    
+   
+	    
 
 </beans>

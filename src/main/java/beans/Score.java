@@ -2,17 +2,49 @@ package beans;
 
 import java.util.Date;
 
+import utils.IdUtil;
+
 public class Score {
     private String id;
     private String studentId;
     private String subjectDetailId;
-    private float score10;
-    private String letterGrade;
-    private float gpa4;
+    private Float score10; // Điểm tổng
+    private String letterGrade; // Điểm chữ
+    private Float gpa4; // Điểm GPA
+    private Integer examTime; // Lần thi thứ mấy
     
     private boolean status;
+    private String updatedBy;
     private Date createdDate;
     private Date updatedDate;
+    
+    
+    
+    
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+	public Float getScore10() {
+		return score10;
+	}
+	public void setScore10(Float score10) {
+		this.score10 = score10;
+	}
+	public Float getGpa4() {
+		return gpa4;
+	}
+	public void setGpa4(Float gpa4) {
+		this.gpa4 = gpa4;
+	}
+	public Integer getExamTime() {
+		return examTime;
+	}
+	public void setExamTime(Integer examTime) {
+		this.examTime = examTime;
+	}
 	public String getId() {
 		return id;
 	}
@@ -31,24 +63,14 @@ public class Score {
 	public void setSubjectDetailId(String subjectDetailId) {
 		this.subjectDetailId = subjectDetailId;
 	}
-	public float getScore10() {
-		return score10;
-	}
-	public void setScore10(float score10) {
-		this.score10 = score10;
-	}
+
 	public String getLetterGrade() {
 		return letterGrade;
 	}
 	public void setLetterGrade(String letterGrade) {
 		this.letterGrade = letterGrade;
 	}
-	public float getGpa4() {
-		return gpa4;
-	}
-	public void setGpa4(float gpa4) {
-		this.gpa4 = gpa4;
-	}
+
 	public boolean isStatus() {
 		return status;
 	}
@@ -67,6 +89,22 @@ public class Score {
 	public void setUpdatedDate(Date updatedDate) {
 		this.updatedDate = updatedDate;
 	}
+	public Score(String studentId, String subjectDetailId, boolean status) {
+		super();
+		this.id = IdUtil.generateId();
+		this.studentId = studentId;
+		this.subjectDetailId = subjectDetailId;
+		this.status = status;
+		this.createdDate = new Date();
+		this.updatedDate = new Date();
+	}
+	public Score() {
+		super();
+	}
+	
+	
+	
+	
 
 
 }

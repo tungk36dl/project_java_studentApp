@@ -4,20 +4,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
+import beans.Classes;
 import beans.Cohort;
 
-
+@Repository
 public class DaoCohort {
+	@Autowired
     private JdbcTemplate template;
-
-    public void setTemplate(JdbcTemplate template) {
-        this.template = template;
-    }
 
     public int save(Cohort c) {
         String sql = "INSERT INTO Cohort (id, cohortName, status, createdDate, updatedDate) VALUES (?, ?, ?, ?, ?)";
@@ -35,8 +35,15 @@ public class DaoCohort {
     }
 
     public Cohort getCohortById(String id) {
-        String sql = "SELECT * FROM Cohort WHERE id = ?";
-        return  template.queryForObject(sql, new Object[] { id }, new BeanPropertyRowMapper<Cohort>(Cohort.class));
+    	String sql = "SELECT * FROM cohort WHERE id = ?";
+        List<Cohort> list = template.query(sql, new Object[]{id}, new BeanPropertyRowMapper<>(Cohort.class));
+        return list.isEmpty() ? null : list.get(0);
+    }
+    
+    public Cohort getCohortByName(String cohortName) {
+    	String sql = "SELECT * FROM cohort WHERE cohortName = ?";
+        List<Cohort> list = template.query(sql, new Object[]{cohortName}, new BeanPropertyRowMapper<>(Cohort.class));
+        return list.isEmpty() ? null : list.get(0);
     }
   
     public List<Cohort> getCohort() {

@@ -6,13 +6,22 @@ public class SubjectDetail {
     private String id;
     private String teacherId;
     private String subjectId;
-    private Semester semester;
     private String classId;
+    private Semester semester;
+    private Integer credit;
     private boolean status;
     private Date createdDate;
     private Date updatedDate;
     
     
+    
+    
+	public Integer getCredit() {
+		return credit;
+	}
+	public void setCredit(Integer credit) {
+		this.credit = credit;
+	}
 	public String getId() {
 		return id;
 	}

@@ -26,6 +26,6 @@
 <body>
     <h1>404</h1>
     <h3>Oops! Trang bạn đang tìm không tồn tại.</h3>
-    <a href="/" class="btn btn-primary">Quay về trang chủ</a>
+    <a href="${pageContext.request.contextPath}/" class="btn btn-primary">Quay về trang chủ</a>
 </body>
 </html>

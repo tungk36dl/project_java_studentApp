@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class User {
     private String id;
+    private String code;
     private String username;
     private String password;
     private String fullName;
@@ -24,6 +25,12 @@ public class User {
     
     
     
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
 	public String getRole() {
 		return role;
 	}

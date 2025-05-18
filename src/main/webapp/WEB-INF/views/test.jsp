@@ -8,7 +8,8 @@
 
 <!-- Nội dung trang User -->
 <div class="container mt-4">
-  <h2>Quản lý User</h2>
+  <h2>Trang home</h2>
+  <h3>Đề tài: Quản lý sinh viên</h3>
 </div>
 
 
